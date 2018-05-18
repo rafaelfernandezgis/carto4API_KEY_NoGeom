@@ -31877,7 +31877,7 @@ const source = new _carto_carto_js__WEBPACK_IMPORTED_MODULE_0___default.a.source
 const style = new _carto_carto_js__WEBPACK_IMPORTED_MODULE_0___default.a.style.CartoCSS(`
   #layer {
     polygon-fill: #826DBA;
-    polygon-opacity: 0.9;
+    polygon-opacity: 0.5;
     ::outline {
       line-color: #FFFFFF;
       line-width: 2;

@@ -21,7 +21,7 @@ const source = new carto.source.SQL(getSql(dataset));
 const style = new carto.style.CartoCSS(`
   #layer {
     polygon-fill: #826DBA;
-    polygon-opacity: 0.9;
+    polygon-opacity: 0.5;
     ::outline {
       line-color: #FFFFFF;
       line-width: 2;
