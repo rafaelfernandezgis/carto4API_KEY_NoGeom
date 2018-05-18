@@ -31925,6 +31925,7 @@ function applyFilter(barrio) {
 }
 
 function removeFilter() {
+  alert('removeFilter');
   const newSql = _sql_filter__WEBPACK_IMPORTED_MODULE_2___default()(dataset);
   source.setQuery(newSql);
   filterApplied = false;

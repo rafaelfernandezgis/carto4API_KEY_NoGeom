@@ -69,6 +69,7 @@ function applyFilter (barrio) {
 }
 
 function removeFilter () {
+  alert('removeFilter');
   const newSql = getSql(dataset);
   source.setQuery(newSql);
   filterApplied = false;
