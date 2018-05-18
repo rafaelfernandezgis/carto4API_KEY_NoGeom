@@ -31908,6 +31908,7 @@ barrios.on('dataChanged', data => {
 
 // Cuando hagan click, recibiremos el valor de la columna nombre
 layer.on('featureClicked', event => {
+  alert('click');
   applyFilter(event.data.nombre);
 });
 
