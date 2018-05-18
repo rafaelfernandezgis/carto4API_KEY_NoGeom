@@ -31877,11 +31877,11 @@ const source = new _carto_carto_js__WEBPACK_IMPORTED_MODULE_0___default.a.source
 const style = new _carto_carto_js__WEBPACK_IMPORTED_MODULE_0___default.a.style.CartoCSS(`
   #layer {
     polygon-fill: #826DBA;
-    polygon-opacity: 0.5;
+    polygon-opacity: 0.7;
     ::outline {
       line-color: #FFFFFF;
       line-width: 2;
-      line-opacity: 0.5;
+      line-opacity: 0.9;
     }
   }
 `);
@@ -31908,7 +31908,6 @@ barrios.on('dataChanged', data => {
 
 // Cuando hagan click, recibiremos el valor de la columna nombre
 layer.on('featureClicked', event => {
-  alert('click');
   applyFilter(event.data.nombre);
 });
 
@@ -31925,7 +31924,6 @@ function applyFilter(barrio) {
 }
 
 function removeFilter() {
-  alert('removeFilter');
   const newSql = _sql_filter__WEBPACK_IMPORTED_MODULE_2___default()(dataset);
   source.setQuery(newSql);
   filterApplied = false;

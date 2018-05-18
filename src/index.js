@@ -21,11 +21,11 @@ const source = new carto.source.SQL(getSql(dataset));
 const style = new carto.style.CartoCSS(`
   #layer {
     polygon-fill: #826DBA;
-    polygon-opacity: 0.5;
+    polygon-opacity: 0.7;
     ::outline {
       line-color: #FFFFFF;
       line-width: 2;
-      line-opacity: 0.5;
+      line-opacity: 0.9;
     }
   }
 `);
@@ -52,7 +52,6 @@ barrios.on('dataChanged', (data) => {
 
 // Cuando hagan click, recibiremos el valor de la columna nombre
 layer.on('featureClicked', event => {
-  alert('click');
   applyFilter(event.data.nombre);
 });
 
@@ -69,7 +68,6 @@ function applyFilter (barrio) {
 }
 
 function removeFilter () {
-  alert('removeFilter');
   const newSql = getSql(dataset);
   source.setQuery(newSql);
   filterApplied = false;
