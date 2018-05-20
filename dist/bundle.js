@@ -31890,11 +31890,11 @@ const style = new _carto_carto_js__WEBPACK_IMPORTED_MODULE_0___default.a.style.C
 
 // Establecemos interactividad en la columna nombre
 const layer = new _carto_carto_js__WEBPACK_IMPORTED_MODULE_0___default.a.layer.Layer(source, style, {
-  featureClickColumns: ['nombre']
+  featureClickColumns: ['id']
 });
 
 // Usamos un dataview de categorias para obtener los nombres de los barrios
-const barrios = new _carto_carto_js__WEBPACK_IMPORTED_MODULE_0___default.a.dataview.Category(source, 'nombre', {
+const barrios = new _carto_carto_js__WEBPACK_IMPORTED_MODULE_0___default.a.dataview.Category(source, 'id', {
   limit: Number.MAX_SAFE_INTEGER
 });
 
@@ -31910,7 +31910,7 @@ barrios.on('dataChanged', data => {
 
 // Cuando hagan click, recibiremos el valor de la columna nombre
 layer.on('featureClicked', event => {
-  applyFilter(event.data.nombre);
+  applyFilter(event.data.id);
 });
 
 client.addLayer(layer);

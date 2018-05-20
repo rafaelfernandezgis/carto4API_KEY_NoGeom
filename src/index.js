@@ -34,11 +34,11 @@ const style = new carto.style.CartoCSS(`
 
 // Establecemos interactividad en la columna nombre
 const layer = new carto.layer.Layer(source, style, {
-  featureClickColumns: [ 'nombre' ]
+  featureClickColumns: [ 'id' ]
 });
 
 // Usamos un dataview de categorias para obtener los nombres de los barrios
-const barrios = new carto.dataview.Category(source, 'nombre', {
+const barrios = new carto.dataview.Category(source, 'id', {
   limit: Number.MAX_SAFE_INTEGER
 })
 
@@ -54,7 +54,7 @@ barrios.on('dataChanged', (data) => {
 
 // Cuando hagan click, recibiremos el valor de la columna nombre
 layer.on('featureClicked', event => {
-  applyFilter(event.data.nombre);
+  applyFilter(event.data.id);
 });
 
 client.addLayer(layer);
