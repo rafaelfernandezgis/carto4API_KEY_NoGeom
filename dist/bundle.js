@@ -31875,7 +31875,7 @@ let filterApplied = false;
 const dataset = 'rgi_mini_urban';
 const ind = 'rgi_mini_urban';
 const geo = 'geo_boundary_geometry';
-const source = new _carto_carto_js__WEBPACK_IMPORTED_MODULE_0___default.a.source.SQL(Object(_sql_filter__WEBPACK_IMPORTED_MODULE_2__["getSql2"])(ind, geo));
+const source = new _carto_carto_js__WEBPACK_IMPORTED_MODULE_0___default.a.source.SQL(_sql_filter__WEBPACK_IMPORTED_MODULE_2___default()(ind, geo));
 const style = new _carto_carto_js__WEBPACK_IMPORTED_MODULE_0___default.a.style.CartoCSS(`
   #layer {
     polygon-fill: #826DBA;
@@ -31919,17 +31919,19 @@ client.getLeafletLayer().addTo(map);
 
 // Helpers
 
-function applyFilter(barrio) {
-  const newSql = Object(_sql_filter__WEBPACK_IMPORTED_MODULE_2__["getSql"])(dataset, 'nombre', barrio);
+/*
+function applyFilter (barrio) {
+  const newSql = getSql(dataset, 'nombre', barrio);
   source.setQuery(newSql);
   filterApplied = true;
 }
 
-function removeFilter() {
-  const newSql = Object(_sql_filter__WEBPACK_IMPORTED_MODULE_2__["getSql"])(dataset);
+function removeFilter () {
+  const newSql = getSql(dataset);
   source.setQuery(newSql);
   filterApplied = false;
 }
+*/
 
 function onTableClicked(event) {
   applyFilter(event.target.dataset.name);
@@ -31956,7 +31958,6 @@ function getSql2(ind, geo) {
 }
 
 module.exports = getSql2;
-module.exports = getSql;
 
 /***/ }),
 

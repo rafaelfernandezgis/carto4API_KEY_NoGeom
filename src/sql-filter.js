@@ -12,4 +12,3 @@ function getSql2 (ind, geo) {
 }
 
 module.exports = getSql2;
-module.exports = getSql;

@@ -1,6 +1,6 @@
 import carto from '@carto/carto.js';
 import renderTable from './table-renderer';
-import {getSql, getSql2} from './sql-filter';
+import getSql2 from './sql-filter';
 
 const madridCenter = [40.4168, -3.7038];
 const map = L.map('map').setView(madridCenter, 11);
@@ -63,6 +63,7 @@ client.getLeafletLayer().addTo(map);
 
 // Helpers
 
+/*
 function applyFilter (barrio) {
   const newSql = getSql(dataset, 'nombre', barrio);
   source.setQuery(newSql);
@@ -74,6 +75,7 @@ function removeFilter () {
   source.setQuery(newSql);
   filterApplied = false;
 }
+*/
 
 function onTableClicked (event) {
   applyFilter(event.target.dataset.name);
