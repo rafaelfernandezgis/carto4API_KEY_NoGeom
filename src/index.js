@@ -1,6 +1,6 @@
 import carto from '@carto/carto.js';
 import renderTable from './table-renderer';
-import getSql2 from './sql-filter';
+import getSql from './sql-filter';
 
 const madridCenter = [40.4168, -3.7038];
 const map = L.map('map').setView(madridCenter, 11);
@@ -19,7 +19,7 @@ let filterApplied = false;
 const dataset = 'rgi_mini_urban';
 const ind = 'rgi_mini_urban';
 const geo = 'geo_boundary_geometry';
-const source = new carto.source.SQL(getSql2(ind,geo));
+const source = new carto.source.SQL(getSql(ind,geo));
 const style = new carto.style.CartoCSS(`
   #layer {
     polygon-fill: #826DBA;
