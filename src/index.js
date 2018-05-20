@@ -1,6 +1,6 @@
 import carto from '@carto/carto.js';
 import renderTable from './table-renderer';
-import getSql from './sql-filter';
+import {getSql, getSql2} from './sql-filter';
 
 const madridCenter = [40.4168, -3.7038];
 const map = L.map('map').setView(madridCenter, 11);

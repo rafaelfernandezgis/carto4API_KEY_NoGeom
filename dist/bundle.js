@@ -31875,7 +31875,7 @@ let filterApplied = false;
 const dataset = 'rgi_mini_urban';
 const ind = 'rgi_mini_urban';
 const geo = 'geo_boundary_geometry';
-const source = new _carto_carto_js__WEBPACK_IMPORTED_MODULE_0___default.a.source.SQL(getSql2(ind, geo));
+const source = new _carto_carto_js__WEBPACK_IMPORTED_MODULE_0___default.a.source.SQL(Object(_sql_filter__WEBPACK_IMPORTED_MODULE_2__["getSql2"])(ind, geo));
 const style = new _carto_carto_js__WEBPACK_IMPORTED_MODULE_0___default.a.style.CartoCSS(`
   #layer {
     polygon-fill: #826DBA;
@@ -31920,13 +31920,13 @@ client.getLeafletLayer().addTo(map);
 // Helpers
 
 function applyFilter(barrio) {
-  const newSql = _sql_filter__WEBPACK_IMPORTED_MODULE_2___default()(dataset, 'nombre', barrio);
+  const newSql = Object(_sql_filter__WEBPACK_IMPORTED_MODULE_2__["getSql"])(dataset, 'nombre', barrio);
   source.setQuery(newSql);
   filterApplied = true;
 }
 
 function removeFilter() {
-  const newSql = _sql_filter__WEBPACK_IMPORTED_MODULE_2___default()(dataset);
+  const newSql = Object(_sql_filter__WEBPACK_IMPORTED_MODULE_2__["getSql"])(dataset);
   source.setQuery(newSql);
   filterApplied = false;
 }
