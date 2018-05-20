@@ -31866,14 +31866,16 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/
 }).addTo(map);
 
 const client = new _carto_carto_js__WEBPACK_IMPORTED_MODULE_0___default.a.Client({
-  apiKey: 'ylrDM6KpKDS1ToOVxX_vWA',
-  username: 'cartojs-test'
+  apiKey: '4yL3MeLsduy2pgL39XfgQA',
+  username: 'udasaas'
 });
 
 let filterApplied = false;
 
-const dataset = 'barrios';
-const source = new _carto_carto_js__WEBPACK_IMPORTED_MODULE_0___default.a.source.SQL(_sql_filter__WEBPACK_IMPORTED_MODULE_2___default()(dataset));
+const dataset = 'rgi_mini_urban';
+const ind = 'rgi_mini_urban';
+const geo = 'geo_boundary_geometry';
+const source = new _carto_carto_js__WEBPACK_IMPORTED_MODULE_0___default.a.source.SQL(getSql2(ind, geo));
 const style = new _carto_carto_js__WEBPACK_IMPORTED_MODULE_0___default.a.style.CartoCSS(`
   #layer {
     polygon-fill: #826DBA;
@@ -31947,6 +31949,13 @@ function getSql(dataset, filterColumn, filterValue) {
 
   return `SELECT * FROM ${dataset}${filter}`;
 }
+
+function getSql2(ind, geo) {
+
+  return `SELECT ind.cartodb_id, ind.id, ind.o_a, ind.o_pu, ind.s_t, ind.y_s, geo.the_geom, geo.the_geom_webmercator FROM udasaas.${geo} as geo INNER JOIN udasaas.${ind} ind on geo.id = ind.id`;
+}
+
+module.exports = getSql2;
 
 module.exports = getSql;
 

@@ -10,14 +10,16 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/
 }).addTo(map);
 
 const client = new carto.Client({
-  apiKey: 'ylrDM6KpKDS1ToOVxX_vWA',
-  username: 'cartojs-test'
+  apiKey: '4yL3MeLsduy2pgL39XfgQA',
+  username: 'udasaas'
 });
 
 let filterApplied = false;
 
-const dataset = 'barrios';
-const source = new carto.source.SQL(getSql(dataset));
+const dataset = 'rgi_mini_urban';
+const ind = 'rgi_mini_urban';
+const geo = 'geo_boundary_geometry';
+const source = new carto.source.SQL(getSql2(ind,geo));
 const style = new carto.style.CartoCSS(`
   #layer {
     polygon-fill: #826DBA;
