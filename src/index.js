@@ -48,7 +48,7 @@ barrios.addFilter(bboxFilter);
 
 // Cuando cambien los datos del dataview, repintamos la tabla
 barrios.on('dataChanged', (data) => {
-  const names = data.categories.map(item => item.name);
+  const names = data.categories.map(item => item.id);
   renderTable(document.getElementById('table'), names, onTableClicked, filterApplied, removeFilter);
 });
 

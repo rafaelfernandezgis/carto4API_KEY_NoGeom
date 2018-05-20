@@ -31904,7 +31904,7 @@ barrios.addFilter(bboxFilter);
 
 // Cuando cambien los datos del dataview, repintamos la tabla
 barrios.on('dataChanged', data => {
-  const names = data.categories.map(item => item.name);
+  const names = data.categories.map(item => item.id);
   _table_renderer__WEBPACK_IMPORTED_MODULE_1___default()(document.getElementById('table'), names, onTableClicked, filterApplied, removeFilter);
 });
 
