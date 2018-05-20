@@ -31955,9 +31955,7 @@ function getSql2(ind, geo) {
   return `SELECT ind.cartodb_id, ind.id, ind.o_a, ind.o_pu, ind.s_t, ind.y_s, geo.the_geom, geo.the_geom_webmercator FROM udasaas.${geo} as geo INNER JOIN udasaas.${ind} ind on geo.id = ind.id`;
 }
 
-module.exports = getSql2;
-
-module.exports = getSql;
+module.exports = { getSql, getSql2 };
 
 /***/ }),
 
