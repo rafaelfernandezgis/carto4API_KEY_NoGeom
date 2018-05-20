@@ -38,9 +38,11 @@ const layer = new carto.layer.Layer(source, style, {
 });
 
 // Usamos un dataview de categorias para obtener los nombres de los barrios
+/*
 const barrios = new carto.dataview.Category(source, 'id', {
   limit: Number.MAX_SAFE_INTEGER
 })
+*/
 
 // Usamos un bounding box filter para que las categorias estén filtradas por el viewport
 const bboxFilter = new carto.filter.BoundingBoxLeaflet(map);
@@ -58,7 +60,7 @@ layer.on('featureClicked', event => {
 });
 
 client.addLayer(layer);
-client.addDataview(barrios);
+//client.addDataview(barrios);
 client.getLeafletLayer().addTo(map);
 
 // Helpers
