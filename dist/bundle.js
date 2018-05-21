@@ -31850,39 +31850,33 @@ module.exports = Model.extend({
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _carto_carto_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @carto/carto.js */ "./node_modules/@carto/carto.js/carto.js");
 /* harmony import */ var _carto_carto_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_carto_carto_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _table_renderer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./table-renderer */ "./src/table-renderer.js");
-/* harmony import */ var _table_renderer__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_table_renderer__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _sql_filter__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./sql-filter */ "./src/sql-filter.js");
-/* harmony import */ var _sql_filter__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_sql_filter__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _sql_filter__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./sql-filter */ "./src/sql-filter.js");
+/* harmony import */ var _sql_filter__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_sql_filter__WEBPACK_IMPORTED_MODULE_1__);
 
 
 
-
-const madridCenter = [40.4168, -3.7038];
-const map = L.map('map').setView(madridCenter, 11);
+const extremaduraCenter = [39.293543, -6.135158];
+const map = L.map('map').setView(extremaduraCenter, 8);
 
 L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}.png', {
   maxZoom: 18
 }).addTo(map);
 
 const client = new _carto_carto_js__WEBPACK_IMPORTED_MODULE_0___default.a.Client({
-  apiKey: '4yL3MeLsduy2pgL39XfgQA',
+  apiKey: 'kmgOWAYJ7Suu7wx9IePRow',
   username: 'udasaas'
 });
 
-let filterApplied = false;
-
 const dataset = 'rgi_mini_urban';
-const ind = 'rgi_mini_urban';
-const geo = 'geo_boundary_geometry';
-const source = new _carto_carto_js__WEBPACK_IMPORTED_MODULE_0___default.a.source.SQL(_sql_filter__WEBPACK_IMPORTED_MODULE_2___default()(ind, geo));
+//const dataset = 'rgi';
+const source = new _carto_carto_js__WEBPACK_IMPORTED_MODULE_0___default.a.source.SQL(_sql_filter__WEBPACK_IMPORTED_MODULE_1___default()(dataset));
 const style = new _carto_carto_js__WEBPACK_IMPORTED_MODULE_0___default.a.style.CartoCSS(`
   #layer {
     polygon-fill: #826DBA;
-    polygon-opacity: 0.7;
+    polygon-opacity: 0.3;
     ::outline {
       line-color: #FFFFFF;
-      line-width: 2;
+      line-width: 1;
       line-opacity: 0.9;
     }
   }
@@ -31893,51 +31887,36 @@ const layer = new _carto_carto_js__WEBPACK_IMPORTED_MODULE_0___default.a.layer.L
   featureClickColumns: ['id']
 });
 
-// Usamos un dataview de categorias para obtener los nombres de los barrios
-/*
-const barrios = new carto.dataview.Category(source, 'id', {
-  limit: Number.MAX_SAFE_INTEGER
-})
-*/
+const formulaDataview = new _carto_carto_js__WEBPACK_IMPORTED_MODULE_0___default.a.dataview.Formula(source, 'o_pu', {
+  operation: _carto_carto_js__WEBPACK_IMPORTED_MODULE_0___default.a.operation.AVG
+});
+
+formulaDataview.on('dataChanged', newData => {
+  console.log(newData);
+  //parseFloat(value).toLocaleString('de-DE', { maximumFractionDigits: 1 });
+  if (newData.result) document.getElementById('ind_precios_value').innerText = Math.round(newData.result);
+});
+
+formulaDataview.on('statusChanged', (status, error) => {
+  if (status === 'loading') console.log("status loading");
+  if (status === 'loaded') console.log("status loaded");
+});
+formulaDataview.on('error', cartoError => {
+  console.log(cartoError);
+});
 
 // Usamos un bounding box filter para que las categorias estén filtradas por el viewport
 const bboxFilter = new _carto_carto_js__WEBPACK_IMPORTED_MODULE_0___default.a.filter.BoundingBoxLeaflet(map);
-barrios.addFilter(bboxFilter);
-
-// Cuando cambien los datos del dataview, repintamos la tabla
-barrios.on('dataChanged', data => {
-  const names = data.categories.map(item => item.id);
-  _table_renderer__WEBPACK_IMPORTED_MODULE_1___default()(document.getElementById('table'), names, onTableClicked, filterApplied, removeFilter);
-});
+formulaDataview.addFilter(bboxFilter);
 
 // Cuando hagan click, recibiremos el valor de la columna nombre
 layer.on('featureClicked', event => {
-  applyFilter(event.data.id);
+  console.log('Tabla: ' + dataset + ', id: ' + event.data.id);
 });
 
 client.addLayer(layer);
-//client.addDataview(barrios);
+client.addDataview(formulaDataview);
 client.getLeafletLayer().addTo(map);
-
-// Helpers
-
-/*
-function applyFilter (barrio) {
-  const newSql = getSql(dataset, 'nombre', barrio);
-  source.setQuery(newSql);
-  filterApplied = true;
-}
-
-function removeFilter () {
-  const newSql = getSql(dataset);
-  source.setQuery(newSql);
-  filterApplied = false;
-}
-*/
-
-function onTableClicked(event) {
-  applyFilter(event.target.dataset.name);
-}
 
 /***/ }),
 
@@ -31948,57 +31927,14 @@ function onTableClicked(event) {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-/*
-function getSql (dataset, filterColumn, filterValue) {
-  const filter = filterColumn
-    ? ` WHERE ${ filterColumn} = '${ filterValue}'`
-    : '';
 
-  return `SELECT * FROM ${ dataset}${ filter }`;
-}
-*/
+function getSql(dataset, filterColumn, filterValue) {
+  const filter = filterColumn ? ` WHERE udasaas.${dataset}.${filterColumn} = '${filterValue}'` : '';
 
-function getSql(ind, geo) {
-  console.log(`SELECT ind.cartodb_id, ind.id, ind.o_a, ind.o_pu, ind.s_t, ind.y_s, geo.the_geom, geo.the_geom_webmercator FROM udasaas.${geo} as geo INNER JOIN udasaas.${ind} ind on geo.id = ind.id`);
-  return `SELECT ind.cartodb_id, ind.id, ind.o_a, ind.o_pu, ind.s_t, ind.y_s, geo.the_geom, geo.the_geom_webmercator FROM udasaas.${geo} as geo INNER JOIN udasaas.${ind} ind on geo.id = ind.id`;
+  return `SELECT ind.cartodb_id, ind.id, ind.o_a, ind.o_pu, ind.s_t, ind.y_s, geo.the_geom, geo.the_geom_webmercator FROM udasaas.geo_boundary_geometry as geo INNER JOIN udasaas.${dataset} ind on geo.id = ind.id ${filter}`;
 }
 
 module.exports = getSql;
-
-/***/ }),
-
-/***/ "./src/table-renderer.js":
-/*!*******************************!*\
-  !*** ./src/table-renderer.js ***!
-  \*******************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-function renderTable(element, data, barriosCallback, filter, filterCallback) {
-  while (element.firstChild) {
-    element.removeChild(element.firstChild);
-  }
-  if (filter) {
-    const removeFilter = document.createElement('span');
-    removeFilter.textContent = 'x remove filter';
-    removeFilter.className = 'remove-filter';
-    element.appendChild(removeFilter);
-
-    removeFilter.addEventListener('click', filterCallback);
-  }
-  const barrios = document.createElement('div');
-  barrios.className = 'barrios';
-  element.appendChild(barrios);
-  data.forEach(item => {
-    const span = document.createElement('span');
-    span.textContent = item;
-    span.dataset.name = item;
-    barrios.appendChild(span);
-  });
-  barrios.addEventListener('click', barriosCallback);
-}
-
-module.exports = renderTable;
 
 /***/ })
 
