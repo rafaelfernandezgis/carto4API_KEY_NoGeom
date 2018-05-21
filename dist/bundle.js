@@ -31894,7 +31894,7 @@ const formulaDataview = new _carto_carto_js__WEBPACK_IMPORTED_MODULE_0___default
 formulaDataview.on('dataChanged', newData => {
   console.log(newData);
   //parseFloat(value).toLocaleString('de-DE', { maximumFractionDigits: 1 });
-  if (newData.result) document.getElementById('ind_precios_value').innerText = Math.round(newData.result);
+  if (newData.result) document.getElementById('ind_precios_value').innerText = Math.round(newData.result.toString());
 });
 
 formulaDataview.on('statusChanged', (status, error) => {
