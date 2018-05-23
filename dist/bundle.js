@@ -31855,21 +31855,21 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const extremaduraCenter = [40.293543, -6.135158];
-const map = L.map('map').setView(extremaduraCenter, 8);
+const spainCenter = [39.293543, -6.135158];
+const map = L.map('map').setView(spainCenter, 5);
 
-L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}.png', {
+L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png', {
   maxZoom: 18
 }).addTo(map);
 
 const client = new _carto_carto_js__WEBPACK_IMPORTED_MODULE_0___default.a.Client({
-  apiKey: 'kmgOWAYJ7Suu7wx9IePRow',
+  apiKey: 'sx2FhHRW7Dyg25L3vrcsXA',
   username: 'udasaas'
 });
 
-const dataset = 'rgi_mini_urban';
-//const dataset = 'rgi';
-const source = new _carto_carto_js__WEBPACK_IMPORTED_MODULE_0___default.a.source.SQL(_sql_filter__WEBPACK_IMPORTED_MODULE_1___default()(dataset));
+//const dataset = 'rgi_mini_urban';
+const dataset = 'rgi';
+const source = new _carto_carto_js__WEBPACK_IMPORTED_MODULE_0___default.a.source.SQL(_sql_filter__WEBPACK_IMPORTED_MODULE_1___default()(dataset, 5, map.getBounds()));
 const style = new _carto_carto_js__WEBPACK_IMPORTED_MODULE_0___default.a.style.CartoCSS(`
   #layer {
     polygon-fill: #826DBA;
@@ -31891,44 +31891,51 @@ const layer = new _carto_carto_js__WEBPACK_IMPORTED_MODULE_0___default.a.layer.L
 const ids = new _carto_carto_js__WEBPACK_IMPORTED_MODULE_0___default.a.dataview.Category(source, 'id', {
   limit: Number.MAX_SAFE_INTEGER
 });
-ids.on('dataChanged', data => {
+
+/*
+ids.on('dataChanged', (data) => {
   console.log(data);
   const ids = data.categories.map(item => item.name);
   console.log(ids);
 
   let newIds = JSON.stringify(ids).slice(1, -1);
-  //newIds = newIds.slice(1, -1);
-
-  const test = [702, 703, 704, 705, 706, 707, 708, 709, 710, 711, 712, 713, 714, 715, 716, 717, 719, 720, 721, 722, 723, 724];
-
+  
   const apiKey = 'WOJ6qvpWJmQNrUC4QGScrA';
-  const username = 'udasaas';
+  const username = 'udasaas'
 
   const query = `SELECT ST_Extent(the_geom) as extent FROM udasaas.geo_boundary_geometry WHERE id = ANY ('{${newIds}}'::int[])`;
-  const boundsUrl = `https://${username}.carto.com/api/v2/sql?q=${query}&api_key=${apiKey}`;
+  const boundsUrl = `https://${username}.carto.com/api/v2/sql?q=${query}&api_key=${apiKey}`
 
-  fetch(boundsUrl).then(response => {
-    return response.json();
-  }).then(json => {
-    const extent = json.rows[0].extent;
-    const bounds = parseExtent(extent);
-    console.log(extent);
-    console.log(bounds);
-    map.fitBounds([[bounds.south, bounds.west], [bounds.north, bounds.east]]);
-  });
+      fetch(boundsUrl)
+        .then(response => {
+          return response.json()
+        })
+        .then(json => {
+          const extent = json.rows[0].extent;
+          const bounds = parseExtent(extent);
+          console.log(extent);
+          console.log(bounds);
+          map.fitBounds(
+            [
+              [bounds.south, bounds.west],
+              [bounds.north, bounds.east]
+            ]
+          );
+        });
 
-  // From BOX(-179.5 -89.9,179.3 82.3) to bounds object
-  function parseExtent(extent) {
-    const floatRegex = /-?[0-9]\d*(\.\d+)?/g;
-    const matches = extent.match(floatRegex);
-    return {
-      west: Number.parseFloat(matches[0]),
-      south: Number.parseFloat(matches[1]),
-      east: Number.parseFloat(matches[2]),
-      north: Number.parseFloat(matches[3])
-    };
-  }
+      // From BOX(-179.5 -89.9,179.3 82.3) to bounds object
+      function parseExtent (extent) {
+        const floatRegex = /-?[0-9]\d*(\.\d+)?/g;
+        const matches = extent.match(floatRegex);
+        return {
+          west: Number.parseFloat(matches[0]),
+          south: Number.parseFloat(matches[1]),
+          east: Number.parseFloat(matches[2]),
+          north: Number.parseFloat(matches[3])
+        };
+      }
 });
+*/
 
 const formulaDataview = new _carto_carto_js__WEBPACK_IMPORTED_MODULE_0___default.a.dataview.Formula(source, 'o_pu', {
   operation: _carto_carto_js__WEBPACK_IMPORTED_MODULE_0___default.a.operation.AVG
@@ -31959,6 +31966,17 @@ layer.on('featureClicked', event => {
   console.log('Tabla: ' + dataset + ', id: ' + event.data.id);
 });
 
+map.on('zoomend', function () {
+  //alert(map.getZoom());
+  const newSql = _sql_filter__WEBPACK_IMPORTED_MODULE_1___default()(dataset, map.getZoom(), map.getBounds());
+  source.setQuery(newSql);
+});
+map.on('moveend', function () {
+  //alert(map.getZoom());
+  const newSql = _sql_filter__WEBPACK_IMPORTED_MODULE_1___default()(dataset, map.getZoom(), map.getBounds());
+  source.setQuery(newSql);
+});
+
 client.addLayer(layer);
 client.addDataview(formulaDataview);
 client.addDataview(ids);
@@ -31974,10 +31992,23 @@ client.getLeafletLayer().addTo(map);
 /***/ (function(module, exports) {
 
 
-function getSql(dataset, filterColumn, filterValue) {
-  const filter = filterColumn ? ` WHERE udasaas.${dataset}.${filterColumn} = '${filterValue}'` : '';
+function getSql(dataset, zoom, bbox) {
+  /*
+  const filter = filterColumn
+    ? ` WHERE udasaas.${dataset}.${ filterColumn} = '${ filterValue}'`
+    : 'WHERE geo.id = 1';
+    */
 
-  return `SELECT ind.cartodb_id, ind.id, ind.o_a, ind.o_pu, ind.s_t, ind.y_s, geo.the_geom, geo.the_geom_webmercator FROM udasaas.geo_boundary_geometry as geo INNER JOIN udasaas.${dataset} ind on geo.id = ind.id ${filter}`;
+  let filter = null;
+  if (zoom < 6) filter = ` WHERE ind.type = 10 and ST_Intersects(geo.the_geom, ST_MakeEnvelope(${bbox.getNorthEast().lng}, ${bbox.getNorthEast().lat}, ${bbox.getSouthWest().lng}, ${bbox.getSouthWest().lat}, 4326)) and ind.operation = 1 and ind.category_id is null`;
+  if (zoom === 6) filter = ` WHERE ind.type = 11 and ST_Intersects(geo.the_geom, ST_MakeEnvelope(${bbox.getNorthEast().lng}, ${bbox.getNorthEast().lat}, ${bbox.getSouthWest().lng}, ${bbox.getSouthWest().lat}, 4326)) and ind.operation = 1 and ind.category_id is null`;
+  if (zoom > 6 && zoom <= 8) filter = ` WHERE ind.type = 12 and ST_Intersects(geo.the_geom, ST_MakeEnvelope(${bbox.getNorthEast().lng}, ${bbox.getNorthEast().lat}, ${bbox.getSouthWest().lng}, ${bbox.getSouthWest().lat}, 4326)) and ind.operation = 1 and ind.category_id is null`;
+  if (zoom > 8 && zoom <= 11) filter = ` WHERE ind.type = 13 and ST_Intersects(geo.the_geom, ST_MakeEnvelope(${bbox.getNorthEast().lng}, ${bbox.getNorthEast().lat}, ${bbox.getSouthWest().lng}, ${bbox.getSouthWest().lat}, 4326)) and ind.operation = 1 and ind.category_id is null`;
+  if (zoom === 12) filter = ` WHERE ind.type = 14 and ST_Intersects(geo.the_geom, ST_MakeEnvelope(${bbox.getNorthEast().lng}, ${bbox.getNorthEast().lat}, ${bbox.getSouthWest().lng}, ${bbox.getSouthWest().lat}, 4326)) and ind.operation = 1 and ind.category_id is null`;
+  if (zoom > 12) filter = ` WHERE ind.type = 15 and ST_Intersects(geo.the_geom, ST_MakeEnvelope(${bbox.getNorthEast().lng}, ${bbox.getNorthEast().lat}, ${bbox.getSouthWest().lng}, ${bbox.getSouthWest().lat}, 4326)) and ind.operation = 1 and ind.category_id is null`;
+
+  return `SELECT ind.cartodb_id, ind.id, ind.o_a, ind.o_pu, ind.s_t, ind.y_s, geo.the_geom, geo.the_geom_webmercator 
+    FROM udasaas.geo_boundary_geometry as geo INNER JOIN udasaas.${dataset} ind on geo.id = ind.id ${filter}`;
 }
 
 module.exports = getSql;

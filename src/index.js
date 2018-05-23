@@ -1,21 +1,21 @@
 import carto from '@carto/carto.js';
 import getSql from './sql-filter';
 
-const extremaduraCenter = [40.293543, -6.135158];
-const map = L.map('map').setView(extremaduraCenter, 8);
+const spainCenter = [39.293543, -6.135158];
+const map = L.map('map').setView(spainCenter, 5);
 
-L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}.png', {
+L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png', {
   maxZoom: 18
 }).addTo(map);
 
 const client = new carto.Client({
-  apiKey: 'kmgOWAYJ7Suu7wx9IePRow',
+  apiKey: 'sx2FhHRW7Dyg25L3vrcsXA',
   username: 'udasaas'
 });
 
-const dataset = 'rgi_mini_urban';
-//const dataset = 'rgi';
-const source = new carto.source.SQL(getSql(dataset));
+//const dataset = 'rgi_mini_urban';
+const dataset = 'rgi';
+const source = new carto.source.SQL(getSql(dataset, 5, map.getBounds()));
 const style = new carto.style.CartoCSS(`
   #layer {
     polygon-fill: #826DBA;
@@ -33,20 +33,20 @@ const layer = new carto.layer.Layer(source, style, {
   featureClickColumns: [ 'id' ]
 });
 
+
 // Usamos un dataview de categorias para obtener los IDs
 const ids = new carto.dataview.Category(source, 'id', {
   limit: Number.MAX_SAFE_INTEGER
 })
+
+/*
 ids.on('dataChanged', (data) => {
   console.log(data);
   const ids = data.categories.map(item => item.name);
   console.log(ids);
 
   let newIds = JSON.stringify(ids).slice(1, -1);
-  //newIds = newIds.slice(1, -1);
-
-  const test = [702, 703, 704, 705, 706, 707, 708, 709, 710, 711, 712, 713, 714, 715, 716, 717, 719, 720, 721, 722, 723, 724];
-
+  
   const apiKey = 'WOJ6qvpWJmQNrUC4QGScrA';
   const username = 'udasaas'
 
@@ -82,6 +82,7 @@ ids.on('dataChanged', (data) => {
         };
       }
 });
+*/
 
 const formulaDataview = new carto.dataview.Formula(source, 'o_pu', {
   operation: carto.operation.AVG,
@@ -107,9 +108,22 @@ formulaDataview.on('error', cartoError => { console.log(cartoError); });
 const bboxFilter = new carto.filter.BoundingBoxLeaflet(map);
 formulaDataview.addFilter(bboxFilter);
 
+
 // Cuando hagan click, recibiremos el valor de la columna nombre
 layer.on('featureClicked', event => {
   console.log('Tabla: ' + dataset + ', id: ' + event.data.id);
+});
+
+
+map.on('zoomend', function() {
+  //alert(map.getZoom());
+  const newSql = getSql(dataset, map.getZoom(), map.getBounds());
+  source.setQuery(newSql);
+});
+map.on('moveend', function() {
+  //alert(map.getZoom());
+  const newSql = getSql(dataset, map.getZoom(), map.getBounds());
+  source.setQuery(newSql);
 });
 
 
