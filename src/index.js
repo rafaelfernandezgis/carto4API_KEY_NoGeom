@@ -27,12 +27,12 @@ const style = new carto.style.CartoCSS(`
     }
   }
 `);
-
+/*
 // Establecemos interactividad en la columna nombre
 const layer = new carto.layer.Layer(source, style, {
   featureClickColumns: [ 'id' ]
 });
-
+*/
 
 // Usamos un dataview de categorias para obtener los IDs
 const ids = new carto.dataview.Category(source, 'id', {
@@ -90,7 +90,7 @@ const formulaDataview = new carto.dataview.Formula(source, 'o_pu', {
 
 
 formulaDataview.on('dataChanged', (newData) => { 
-  console.log(newData);
+  //console.log(newData);
   //const names = data.categories.map(item => item.name);
   
   //parseFloat(value).toLocaleString('de-DE', { maximumFractionDigits: 1 });
@@ -108,12 +108,12 @@ formulaDataview.on('error', cartoError => { console.log(cartoError); });
 const bboxFilter = new carto.filter.BoundingBoxLeaflet(map);
 formulaDataview.addFilter(bboxFilter);
 
-
+/*
 // Cuando hagan click, recibiremos el valor de la columna nombre
 layer.on('featureClicked', event => {
   console.log('Tabla: ' + dataset + ', id: ' + event.data.id);
 });
-
+*/
 
 map.on('zoomend', function() {
   //alert(map.getZoom());
@@ -127,7 +127,7 @@ map.on('moveend', function() {
 });
 
 
-client.addLayer(layer);
+//client.addLayer(layer);
 client.addDataview(formulaDataview);
 client.addDataview(ids);
 client.getLeafletLayer().addTo(map);

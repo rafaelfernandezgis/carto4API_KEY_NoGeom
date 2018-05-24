@@ -31881,11 +31881,12 @@ const style = new _carto_carto_js__WEBPACK_IMPORTED_MODULE_0___default.a.style.C
     }
   }
 `);
-
+/*
 // Establecemos interactividad en la columna nombre
-const layer = new _carto_carto_js__WEBPACK_IMPORTED_MODULE_0___default.a.layer.Layer(source, style, {
-  featureClickColumns: ['id']
+const layer = new carto.layer.Layer(source, style, {
+  featureClickColumns: [ 'id' ]
 });
+*/
 
 // Usamos un dataview de categorias para obtener los IDs
 const ids = new _carto_carto_js__WEBPACK_IMPORTED_MODULE_0___default.a.dataview.Category(source, 'id', {
@@ -31942,7 +31943,7 @@ const formulaDataview = new _carto_carto_js__WEBPACK_IMPORTED_MODULE_0___default
 });
 
 formulaDataview.on('dataChanged', newData => {
-  console.log(newData);
+  //console.log(newData);
   //const names = data.categories.map(item => item.name);
 
   //parseFloat(value).toLocaleString('de-DE', { maximumFractionDigits: 1 });
@@ -31961,10 +31962,12 @@ formulaDataview.on('error', cartoError => {
 const bboxFilter = new _carto_carto_js__WEBPACK_IMPORTED_MODULE_0___default.a.filter.BoundingBoxLeaflet(map);
 formulaDataview.addFilter(bboxFilter);
 
+/*
 // Cuando hagan click, recibiremos el valor de la columna nombre
 layer.on('featureClicked', event => {
   console.log('Tabla: ' + dataset + ', id: ' + event.data.id);
 });
+*/
 
 map.on('zoomend', function () {
   //alert(map.getZoom());
@@ -31977,7 +31980,7 @@ map.on('moveend', function () {
   source.setQuery(newSql);
 });
 
-client.addLayer(layer);
+//client.addLayer(layer);
 client.addDataview(formulaDataview);
 client.addDataview(ids);
 client.getLeafletLayer().addTo(map);
